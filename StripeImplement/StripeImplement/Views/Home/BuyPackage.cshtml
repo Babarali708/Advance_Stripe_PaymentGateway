@@ -1,0 +1,68 @@
+﻿@using Microsoft.Extensions.Options;
+@{
+    ViewData["Title"] = "GetPackage";
+}
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+
+
+
+
+<form id="stripe-form" action="@Url.Action("AddPackage","Home")" method="post">
+    <input name="packageType" id="Package_Type"  hidden>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Select Your Package Type</h5><span style="color:@ViewBag.color">@ViewBag.msg</span>
+            <div class="form-check">
+                <input class="form-check-input" value="One Year" name="packageType" type="checkbox" id="checkbox1" onclick="handleCheckboxClick(this)">
+                <label class="form-check-label" for="checkbox1">
+                    Get Package For 1  year
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" value="Two Year" name="packageType" type="checkbox" id="checkbox2" onclick="handleCheckboxClick(this)">
+                <label class="form-check-label" for="checkbox2">
+                    Get Package For 2  year
+
+                </label>
+            </div>
+
+            @*<button type="button" style="margin-top:30px" class="btn btn-primary">Get Package</button>*@
+        </div>
+    </div>
+
+
+    <input type="text" class="form-control" name="stripeAmount" value="10" hidden>
+    <input type="text" class="form-control" name="stripedescs" value="Test Buy Package" hidden>
+
+    <script src="//checkout.stripe.com/v2/checkout.js" id="sub2" class="stripe-button" data-key="pk_test_51LdJU1JGItIO6che36z9ZVzXobOZwgqCGtjhNU1Xh5jj8rYrwrkjwl4ZvvpZvtEwygS5c51cl4abkLAliD9HZe0400fAG3WJm9" data-label="Get Package" data-description="Buy A Package" data-amount="1000"></script>
+</form>
+
+
+<script>
+    function handleCheckboxClick(checkbox) {
+        debugger;
+        $("#Package_Type").val("");
+
+        // Uncheck all checkboxes except the clicked one
+        const checkboxes = document.querySelectorAll('.form-check-input');
+        checkboxes.forEach(cb => {
+            if (cb !== checkbox) {
+                cb.checked = false;
+            }
+        });
+
+        // Get the value of the clicked checkbox and display it
+        const clickedValue = checkbox.value;
+        $("#Package_Type").val(clickedValue);
+        console.log("Clicked Value:", clickedValue);
+    }
+</script>

@@ -1,0 +1,121 @@
+﻿@using Microsoft.Extensions.Options;
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<!DOCTYPE html>
+
+<head>
+    <title>Bootstrap Example</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+
+<!-- Modal -->
+<!-- Modal -->
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Modal Header</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            </div>
+            <div class="modal-body">
+                <div class="col-md-6">
+                    <form id="stripe-form" action="@Url.Action("ChargePayment","Home")" method="post">
+                        <input type="text" class="form-control" name="workCharges" value="25" hidden>
+                        <input type="text" class="form-control" name="stripedescs" value="Test Stripe Checkout" hidden>
+
+                        @*<button id="sub" class="subm btn btn-success btn-lg mt-2 mb-3" value="PAY">PAY NOW</button>*@
+                        <script src="//checkout.stripe.com/v2/checkout.js" id="sub2" class="stripe-button" data-key="pk_test_51LdJU1JGItIO6che36z9ZVzXobOZwgqCGtjhNU1Xh5jj8rYrwrkjwl4ZvvpZvtEwygS5c51cl4abkLAliD9HZe0400fAG3WJm9" data-label="Pay By Card" data-description="Test Stripe Implementation" data-amount="200"></script>
+                    </form>
+
+                </div>
+                <div class="col-md-6">
+                    <form id="stripe-form" action="@Url.Action("AddOrderByPackage","Home")" method="post">
+
+                        <button class="subm btn btn-success btn-lg mt-2 mb-3" value="PAY">Use Package</button>
+
+                    </form>
+
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="text-center">
+    <h1 class="display-4">Test Stripe Pay</h1><br />
+
+    <p style="color:@ViewBag.color">@ViewBag.msg</p>
+</div>
+<button id="sub" class="subm btn btn-success btn-lg mt-2 mb-3" value="PAY">Place Your Order</button>
+
+
+<br />
+@if (!string.IsNullOrEmpty(ViewBag.Chargeid))
+{
+    <form id="stripe-form" action="@Url.Action("RefundPayment","Home")" method="post">
+        <input type="text" class="form-control" name="chargeId" value="@ViewBag.Chargeid" hidden>
+
+        <button id="sub" class="subm btn btn-success btn-lg mt-2 mb-3">Payment Refund</button>
+    </form>
+}
+<br />
+<form id="stripe-form" action="@Url.Action("BuyPackage","Home")" method="post">
+
+    <button id="sub" class="subm btn btn-success btn-lg mt-2 mb-3">Buy Package</button>
+
+</form>
+<button id="transferBtn" class="subm btn btn-success btn-lg mt-2 mb-3">Transfer To Admin</button>
+
+
+
+<script>
+    // Wait for the document to be ready
+    $(document).ready(function () {
+        // Add click event handler for the "Pay Now" button
+        $("#sub").click(function () {
+            // Show the "myModal" modal
+            $("#myModal").modal("show");
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#transferBtn").click(function () {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "/Home/TransferFunds",
+                data: {
+                    destinationAccountId: "acct_1NXiqEQxxqPzzOoK",
+                    amount: 20
+                },
+                success: function (data) {
+                    debugger;
+                    if (data === true) {
+                        alert("Funds transferred successfully!");
+                    } else {
+                        alert("Failed to transfer funds. Please try again later.");
+                    }
+                },
+                error: function () {
+                    alert("An error occurred during the transfer. Please try again later.");
+                }
+            });
+        });
+    });
+</script>
